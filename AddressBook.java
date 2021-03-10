@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 class ContactDetails {
-
 	private String firstName;
 	private String lastName;
 	private String area;
@@ -14,7 +12,6 @@ class ContactDetails {
 
 	public ContactDetails(String firstName, String lastName, String area, String city, String state, int pin,
 			int phoneNumber, String email) {
-
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.area = area;
@@ -65,11 +62,11 @@ class ContactDetails {
 		this.state = state;
 	}
 
-	public int getPin() {
+	public int getpin() {
 		return this.pin;
 	}
 
-	public void setZip(int zp) {
+	public void setpin(int pn) {
 		this.pin = pin;
 	}
 
@@ -91,12 +88,11 @@ class ContactDetails {
 
 	public String toString() {
 		return "Details of: " + firstName + " " + lastName + "\n" + "Area: " + area + "\n" + "City: " + city + "\n"
-				+ "State: " + state + "\n" + "pin: " + pin + "\n" + "Phone Number: " + phoneNumber + "\n" + "Email: "
+				+ "State: " + state + "\n" + "Pin: " + pin + "\n" + "Phone Number: " + phoneNumber + "\n" + "Email: "
 				+ email;
 	}
 
 	public void setPin(int nextInt) {
-
 
 	}
 }
@@ -139,7 +135,7 @@ class AddressBookDetails {
 			city = sc.next();
 			System.out.println("Enter StateName");
 			state = sc.next();
-			System.out.println("Enter pinCode");
+			System.out.println("Enter PinCode");
 			pin = sc.nextInt();
 			System.out.println("Enter PhoneNumber");
 			phoneNumber = sc.nextInt();
@@ -164,7 +160,7 @@ class AddressBookDetails {
 			System.out.println("Enter StateName");
 			list.get(indexNum).setState(sc.next());
 			System.out.println("Enter pinCode");
-			list.get(indexNum).setPin(sc.nextInt());
+			list.get(indexNum).setpin(sc.nextInt());
 			System.out.println("Enter PhoneNumber");
 			list.get(indexNum).setPhoneNumber(sc.nextInt());
 			System.out.println("Enter Email");
@@ -190,14 +186,13 @@ class AddressBookDetails {
 		}
 	}
 
-	
+	@Override
 	public String toString() {
 		return addressBookName;
 	}
 }
 
 public class AddressBook {
-
 	private static int bookNumber = 0;
 	private static String firstName;
 	private static String lastName;
@@ -209,6 +204,9 @@ public class AddressBook {
 	private static String email;
 
 	public static Scanner sc = new Scanner(System.in);
+
+	public static Map<String, String> dictionaryCity = new HashMap<>();
+	public static Map<String, String> dictionaryState = new HashMap<>();
 
 	public static ArrayList<AddressBookDetails> addressBook = new ArrayList<>();
 
@@ -229,7 +227,6 @@ public class AddressBook {
 	}
 
 	public static void personByState() {
-
 		System.out.println("Enter State Name");
 		state = sc.next();
 		for (int i = 0; i < addressBook.size(); i++)
@@ -239,13 +236,40 @@ public class AddressBook {
 	}
 
 	public static void personByCity() {
-
 		System.out.println("Enter City Name");
 		city = sc.next();
 		for (int i = 0; i < addressBook.size(); i++)
 			for (int j = 0; j < addressBook.get(i).list.size(); j++)
 				if (addressBook.get(i).list.get(j).getCity().equals(city))
 					System.out.println(addressBook.get(i).list.get(j));
+	}
+
+	private static void cityPersonDict() {
+		for (AddressBookDetails address : addressBook)
+			for (ContactDetails contact : address.list) {
+				String name = contact.getFirstName() + " " + contact.getLastName();
+				dictionaryCity.put(name, contact.getCity());
+			}
+
+		System.out.println("Enter City");
+		city = sc.next();
+		for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
+			if (city.equals(ls.getValue()))
+				System.out.println("Name " + ls.getKey());
+	}
+
+	private static void statePersonDict() {
+		for (AddressBookDetails address : addressBook)
+			for (ContactDetails contact : address.list) {
+				String name = contact.getFirstName() + " " + contact.getLastName();
+				dictionaryCity.put(name, contact.getState());
+			}
+
+		System.out.println("Enter State");
+		state = sc.next();
+		for (Map.Entry<String, String> ls : dictionaryCity.entrySet())
+			if (state.equals(ls.getValue()))
+				System.out.println("Name " + ls.getKey());
 	}
 
 	public static void option() {
@@ -285,19 +309,25 @@ public class AddressBook {
 	}
 
 	public static void search() {
-
 		System.out.println("Choose Option");
 		System.out.println("1: By City Name");
 		System.out.println("2: By State Name");
+		System.out.println("3: View Person in City");
+		System.out.println("4: View Person in State");
 
 		String choose = sc.next();
 		switch (choose) {
-
 		case "1":
 			personByCity();
 			break;
 		case "2":
 			personByState();
+			break;
+		case "3":
+			cityPersonDict();
+			break;
+		case "4":
+			statePersonDict();
 			break;
 		default:
 			System.out.println("Wrong Input");
@@ -305,22 +335,21 @@ public class AddressBook {
 	}
 
 	public static void main(String[] args) {
-
 		System.out.println("Welcome to Address Book Program");
 		String check = "Y";
 		while ((check.equals("Y")) || (check.equals("y"))) {
 			addAdressBookDetails();
 			option();
 
-			System.out.println("Do You Want to Search Contacts By Certain Details Like by City, State?");
+			System.out.println("Do You Want to Search Contacts By Certain Details Like by City, State, etc?");
+			System.out.println("Do You Want to Search or View Contacts By Certain Details Like by City, State, etc?");
 			System.out.println("Press y if You Want to Search");
 			String num = sc.next();
 			if (num.equals("Y") || num.equals("y")) {
 				search();
 			} else {
-				System.out.println("You Can Proceed forward");
+				System.out.println("You Can Proceed Further");
 			}
-
 			System.out.println("Want to Add More Address Book (y/n)");
 			check = sc.next();
 		}
